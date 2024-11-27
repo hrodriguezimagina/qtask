@@ -399,72 +399,98 @@ export default {
               align: 'center'
             }
           ],
-          grid: [
-            {
-              name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', style: '',
-              onClick: (val, row) => this.openShowModal(row)
-            },
-            {
-              name: 'title', label: this.$tr('isite.cms.form.title'), field: 'title',
-              align: 'rigth', style: 'max-width: 300px;padding: 10px 0px',
-              onClick: (val, row) => this.openShowModal(row)
-            },            
-            {
-              name: 'startDate', label: this.$tr('isite.cms.form.startDate'), field: 'startDate', align: 'center',
-              //style: 'padding: 100px 50px',
-              contentType: (row, col) => {                
-                return {
-                  template: 'date',
+
+          /*grid*/
+          grid: { 
+            columns: [
+              {
+                name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', style: '',
+                onClick: (val, row) => this.openShowModal(row)
+              },
+              {
+                name: 'title', label: this.$tr('isite.cms.form.title'), field: 'title',
+                align: 'rigth', style: 'max-width: 300px;padding: 10px 0px',
+                onClick: (val, row) => this.openShowModal(row)
+              },            
+              {
+                name: 'startDate', label: this.$tr('isite.cms.form.startDate'), field: 'startDate', align: 'center',
+                //style: 'padding: 100px 50px',
+                contentType: (row, col) => {                
+                  return {
+                    template: 'date',
+                    props: {
+                      date: row.startDate,
+                      expirationDate: moment(),
+                    }
+                  }
+                },
+                dynamicField: {
+                  value: '',
+                  type: 'date',
                   props: {
-                    date: row.startDate,
-                    expirationDate: moment(),
+                    label: this.$tr('isite.cms.form.startDate')
                   }
                 }
               },
-              dynamicField: {
-                value: '',
-                type: 'date',
-                props: {
-                  label: this.$tr('isite.cms.form.startDate')
-                }
-              }
-            },
-            {
-              name: 'endDate', label: this.$tr('isite.cms.form.endDate'), field: 'endDate', align: 'center',
-              //style: 'padding: 0 5px',
-              dynamicField: {
-                value: '',
-                type: 'date',
-                props: {
-                  label: this.$tr('isite.cms.form.endDate')
-                }
-              }
-            },
-            {
-              name: 'assignedTo', label: this.$tr('itask.cms.form.assigned'), field: 'assignedTo', align: 'left',
-              format: (val) => ((val && (val.firstName || val.lastName)) ? `${val.firstName} ${val.lastName}` : '-'),
-              dynamicField: {
-                value: [],
-                type: 'select',
-                name: 'assignedToId',
-                props: {
-                  label: this.$tr('itask.cms.form.assigned'),
-                  useInput: true,
-                  clearable: true,
-                  rules: [
-                    val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
-                  ]
-                },
-                loadOptions: {
-                  apiRoute: 'apiRoutes.quser.users',
-                  select: {
-                    label: 'email',
-                    id: item => `${item.id}`
+              {
+                name: 'endDate', label: this.$tr('isite.cms.form.endDate'), field: 'endDate', align: 'center',
+                //style: 'padding: 0 5px',
+                dynamicField: {
+                  value: '',
+                  type: 'date',
+                  props: {
+                    label: this.$tr('isite.cms.form.endDate')
                   }
                 }
-              }
-            },
-          ],
+              },
+              {
+                name: 'assignedTo', label: this.$tr('itask.cms.form.assigned'), field: 'assignedTo', align: 'left',
+                format: (val) => ((val && (val.firstName || val.lastName)) ? `${val.firstName} ${val.lastName}` : '-'),
+                dynamicField: {
+                  value: [],
+                  type: 'select',
+                  name: 'assignedToId',
+                  props: {
+                    label: this.$tr('itask.cms.form.assigned'),
+                    useInput: true,
+                    clearable: true,
+                    rules: [
+                      val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
+                    ]
+                  },
+                  loadOptions: {
+                    apiRoute: 'apiRoutes.quser.users',
+                    select: {
+                      label: 'email',
+                      id: item => `${item.id}`
+                    }
+                  }
+                }
+              }            
+            ],
+            actions: [
+               {//Open timelogs
+                icon: 'fa-light fa-timer',
+                name: 'addTimelog',
+                label: 'tes dd t',
+                ['text-color']: 'black',
+
+                action: (item) => {
+                  this.openTimeLogsModal(item);
+                }
+              },
+              {//Open timelogs
+                icon: 'fa-light fa-timer',
+                name: 'add',
+                label: '---',
+
+                action: (item) => {
+                  this.openTimeLogsModal(item);
+                }
+              },
+            ],
+          },
+          
           requestParams: {
             include: 'category,status,priority,timelogs.creator,assignedTo',
             filter: {
